@@ -150,8 +150,13 @@ def create_secret(logger,namespace,body,v1=None):
     secret_type = 'Opaque'
     if 'type' in body:
         secret_type = body['type']
-    body  = client.V1Secret()
-    body.metadata = client.V1ObjectMeta(name=sec_name)
+
+    labels = body['metadata']['labels']
+    annotations = body['metadata']['annotations']
+
+    body = client.V1Secret()
+
+    body.metadata = client.V1ObjectMeta(name=sec_name, labels=labels, annotations=annotations)
     body.type = secret_type
     body.data = data
     # kopf.adopt(body)

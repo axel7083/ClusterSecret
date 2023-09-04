@@ -43,7 +43,7 @@ jobs:
 
       - name: Run helm install
         if: steps.list-changed.outputs.changed == 'true'
-        run: helm install cluster-secret .\charts\cluster-secret\ -n cluster-secret --create-namespace
+        run: helm install cluster-secret .\charts\cluster-secret\
 
       - name: Run testing
         if: steps.list-changed.outputs.changed == 'true'

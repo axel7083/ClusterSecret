@@ -17,7 +17,7 @@ class ClusterSecretCases(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls) -> None:
-        # Create namespaces
+        # Create namespaces for tests
         for namespace_name in USER_NAMESPACES:
             namespace = client.V1Namespace(metadata=client.V1ObjectMeta(name=namespace_name))
             try:
@@ -38,7 +38,7 @@ class ClusterSecretCases(unittest.TestCase):
         custom_objects_api.create_namespaced_custom_object(
             group="clustersecret.io",
             version="v1",
-            namespace="example-1",
+            namespace=USER_NAMESPACES[0],
             body={
                 "apiVersion": "clustersecret.io/v1",
                 "kind": "ClusterSecret",
@@ -48,7 +48,10 @@ class ClusterSecretCases(unittest.TestCase):
             plural="clustersecrets",
         )
 
-        self.assertEqual(True, True)
+        secrets = api_instance.list_namespaced_secret(
+            namespace=USER_NAMESPACES[1]
+        )
+        self.assertEqual(len(secrets.items), 1)
 
 
 if __name__ == '__main__':

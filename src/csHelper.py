@@ -35,7 +35,7 @@ def patch_clustersecret_status(logger, namespace, name, new_status, v1=None):
     )
 
 def get_ns_list(logger,body,v1=None):
-    """Returns a list of namespaces where the secret should be matched
+    """Returns a list of namespaces.yaml where the secret should be matched
     """
     if v1 is None:
         v1 = client.CoreV1Api()
@@ -45,8 +45,8 @@ def get_ns_list(logger,body,v1=None):
         matchNamespace = body.get('matchNamespace')
     except KeyError:
         matchNamespace = '*'
-        logger.debug("matching all namespaces.")
-    logger.debug(f'Matching namespaces: {matchNamespace}')
+        logger.debug("matching all namespaces.yaml.")
+    logger.debug(f'Matching namespaces.yaml: {matchNamespace}')
     
     if matchNamespace is None:  # if delted key (issue 26)
         matchNamespace = '*'
@@ -55,7 +55,7 @@ def get_ns_list(logger,body,v1=None):
         avoidNamespaces = body.get('avoidNamespaces')
     except KeyError:
         avoidNamespaces = ''
-        logger.debug("not avoiding namespaces")
+        logger.debug("not avoiding namespaces.yaml")
 
     nss = v1.list_namespace().items
     matchedns = []
@@ -65,13 +65,13 @@ def get_ns_list(logger,body,v1=None):
         for ns in nss:
             if re.match(matchns, ns.metadata.name):
                 matchedns.append(ns.metadata.name)
-                logger.debug(f'Matched namespaces: {ns.metadata.name} match pattern: {matchns}')
+                logger.debug(f'Matched namespaces.yaml: {ns.metadata.name} match pattern: {matchns}')
     if avoidNamespaces:
         for avoidns in avoidNamespaces:
             for ns in nss:
                 if re.match(avoidns, ns.metadata.name):
                     avoidedns.append(ns.metadata.name)
-                    logger.debug(f'Skipping namespaces: {ns.metadata.name} avoid pattern: {avoidns}')  
+                    logger.debug(f'Skipping namespaces.yaml: {ns.metadata.name} avoid pattern: {avoidns}')
     # purge
     for ns in matchedns.copy():
         if ns in avoidedns:

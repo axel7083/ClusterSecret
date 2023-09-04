@@ -35,9 +35,9 @@ rules:
     resources: [clustersecrets]
     verbs: [list, watch, patch]
 
-  # Watch namespaces
+  # Watch namespaces.yaml
   - apiGroups: [""]
-    resources: [namespaces, namespaces/status]
+    resources: [namespaces.yaml, namespaces.yaml/status]
     verbs: [watch, list, get, patch]
 
   # Handle secrets

@@ -15,7 +15,7 @@ def on_delete(spec,uid,body,name,logger=None, **_):
         logger.info(f'deleting secret {name} from namespace {ns}')
         delete_secret(logger, ns, name, v1)
         
-    #delete also from memory: prevent syncing with new namespaces
+    #delete also from memory: prevent syncing with new namespaces.yaml
     try:
         csecs.pop(uid)
         logger.debug(f"csec {uid} deleted from memory ok")
@@ -40,7 +40,7 @@ def on_field_match_namespace(old, new, name, namespace, body, uid, logger=None, 
         to_add = set(updated_matched).difference(set(syncedns))
         to_remove = set(syncedns).difference(set(updated_matched))
 
-        logger.debug(f'Add secret to namespaces: {to_add}, remove from: {to_remove}')
+        logger.debug(f'Add secret to namespaces.yaml: {to_add}, remove from: {to_remove}')
 
         for secret_namespace in to_add:
             create_secret(logger, secret_namespace, body)
@@ -125,7 +125,7 @@ async def create_fn(spec,uid,logger=None,body=None,**kwargs):
 
     return {'syncedns': matchedns}
 
-@kopf.on.create('', 'v1', 'namespaces')
+@kopf.on.create('', 'v1', 'namespaces.yaml')
 async def namespace_watcher(spec,patch,logger,meta,body,**kwargs):
     """Watch for namespace events
     """

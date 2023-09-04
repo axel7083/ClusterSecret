@@ -45,7 +45,7 @@ spec:
       #     priority: 0
   #     JSONPath: .ticket_status
   names:
-    kind: ClusterSecret
+    kind: cluster-secret
     plural: clustersecrets
     singular: clustersecret
     shortNames:

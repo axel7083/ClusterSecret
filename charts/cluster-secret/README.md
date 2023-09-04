@@ -15,7 +15,7 @@ Full documentation available at [https://clustersecret.io](https://clustersecret
 Here is how it looks like:
 
 ```yaml
-kind: ClusterSecret
+kind: cluster-secret
 apiVersion: clustersecret.io/v1
 metadata:
   namespace: clustersecret

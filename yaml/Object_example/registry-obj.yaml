@@ -1,6 +1,6 @@
 # A demo custom resource for the Kopf example operators.
 apiVersion: clustersecret.io/v1
-kind: ClusterSecret
+kind: cluster-secret
 metadata:
   name: global-regcred
   namespace: default

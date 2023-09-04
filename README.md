@@ -23,7 +23,7 @@ Full documentation available at [https://clustersecret.io](https://clustersecret
 Here is how it looks like:
 
 ```yaml
-kind: ClusterSecret
+kind: cluster-secret
 apiVersion: clustersecret.io/v1
 metadata:
   namespace: clustersecret
@@ -77,7 +77,7 @@ For older kubernetes (<1.19) use the image tag `0.0.6` in your helm values file.
 
 ```bash
 helm repo add clutersecret https://charts.clustersecret.io/
-helm install clustersecret clutersecret/ClusterSecret --version 0.1.1 -n clustersecret --create-namespace
+helm install clustersecret clutersecret/cluster-secret --version 0.1.1 -n clustersecret --create-namespace
 ```
 
 # with just kubectl
@@ -85,7 +85,7 @@ helm install clustersecret clutersecret/ClusterSecret --version 0.1.1 -n cluster
 clone the repo and apply
 
 ```bash
-cd ClusterSecret
+cd cluster-secret
 kubectl apply -f ./yaml
 ```
  
@@ -109,7 +109,7 @@ global-secret
 
 ```yaml
 apiVersion: clustersecret.io/v1
-kind: ClusterSecret
+kind: cluster-secret
 metadata:
   name: global-secret
   namespace: my-fav-namespce

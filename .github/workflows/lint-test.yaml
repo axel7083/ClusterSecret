@@ -23,9 +23,6 @@ jobs:
           check-latest: true
           cache: 'pip' # caching pip dependencies
 
-      - run: pip install -r conformance/requirements.txt
-        name: Install python requirements
-
       - name: Set up chart-testing
         uses: helm/chart-testing-action@v2.4.0
 
@@ -49,6 +46,9 @@ jobs:
         if: steps.list-changed.outputs.changed == 'true'
         run: helm install cluster-secret ./charts/cluster-secret -n cluster-secret --create-namespace
 
+      - run: pip3 install -r conformance/requirements.txt
+        name: Install python requirements
+
       - name: Run testing
         if: steps.list-changed.outputs.changed == 'true'
-        run: python conformance/tests.py
+        run: python3 conformance/tests.py

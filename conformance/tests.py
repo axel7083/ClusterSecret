@@ -41,7 +41,7 @@ class ClusterSecretCases(unittest.TestCase):
             namespace="example-1",
             body={
                 "apiVersion": "clustersecret.io/v1",
-                "kind": "cluster-secret",
+                "kind": "ClusterSecret",
                 "metadata": {"name": "simple-cluster-secret"},
                 "data": {"username": "MTIzNDU2Cg=="}
             },

@@ -1,12 +1,18 @@
 import logging
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, List, Optional, AsyncIterator
 import kopf
-from kubernetes import client
+from kubernetes import client, config
 from csHelper import delete_secret, get_ns_list, sync_secret, patch_clustersecret_status, create_secret_metadata, \
     secret_exists
 
+
 # In-memory dictionary for all ClusterSecrets in the Cluster. UID -> ClusterSecret Body
 csecs: Dict[str, Any] = {}
+
+# Load the Kubernetes in cluster config
+config.load_incluster_config()
+
+# Creating Kubernetes clients
 v1 = client.CoreV1Api()
 custom_objects_api = client.CustomObjectsApi()
 
@@ -187,3 +193,34 @@ async def namespace_watcher(logger: logging.Logger, meta: kopf.Meta, **_):
 
     # update ns_new_list on the object so then we also delete from there
     return {'syncedns': ns_new_list}
+
+
+@kopf.on.validate('clustersecret.io', 'v1', 'clustersecrets')
+def authhook(logger: logging.Logger, headers: kopf.Headers, sslpeer: kopf.SSLPeer, warnings: List[str], **_):
+    logger.info(f'{headers=}')
+    logger.info(f'{sslpeer=}')
+
+
+# Thanks for https://github.com/nolar/kopf/issues/785#issuecomment-859931945
+import os
+class ServiceTunnel:
+    async def __call__(
+        self, fn: kopf.WebhookFn
+    ) -> AsyncIterator[kopf.WebhookClientConfig]:
+        namespace = os.environ.get("NAMESPACE")
+        name = os.environ.get("SERVICE_NAME")
+        service_port = int(os.environ.get("SERVICE_PORT", 443))
+        container_port = int(os.environ.get("CONTAINER_PORT", 9443))
+        server = kopf.WebhookServer(port=container_port, host=f"{name}.{namespace}.svc")
+        async for client_config in server(fn):
+            client_config["url"] = None
+            client_config["service"] = kopf.WebhookClientConfigService(
+                name=name, namespace=namespace, port=service_port
+            )
+            yield client_config
+
+
+@kopf.on.startup()
+def configure(settings: kopf.OperatorSettings, **_):
+    settings.admission.server = ServiceTunnel()
+    settings.admission.managed = os.environ.get("WEBHOOK_NAME")

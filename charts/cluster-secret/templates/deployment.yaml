@@ -31,6 +31,16 @@ spec:
           value: {{ .Chart.AppVersion | quote }}
         - name: REPLACE_EXISTING
           value: {{ .Values.clustersecret.clustersecret.replace_existing | default "false" | quote }}
+        - name: NAMESPACE
+          value: {{ .Release.Namespace }}
+        - name: SERVICE_NAME
+          value: {{ include "cluster-secret.fullname" . }}-clustersecret-webhook
+        - name: SERVICE_PORT
+          value: "443"
+        - name: CONTAINER_PORT
+          value: "9443"
+        - name: WEBHOOK_NAME
+          value: "auto.kopf.dev"
         image: {{ .Values.clustersecret.clustersecret.image.repository }}:{{ .Values.clustersecret.clustersecret.image.tag
           | default .Chart.AppVersion }}
         name: clustersecret

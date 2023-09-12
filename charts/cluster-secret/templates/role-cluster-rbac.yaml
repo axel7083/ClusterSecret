@@ -45,8 +45,8 @@ rules:
 - apiGroups:
   - ""
   resources:
-  - namespaces.yaml
-  - namespaces.yaml/status
+  - namespaces
+  - namespaces/status
   verbs:
   - watch
   - list

@@ -27,6 +27,11 @@ spec:
             data:
               type: object
               x-kubernetes-preserve-unknown-fields: true
+            stringData:
+              additionalProperties:
+                type: string
+              description: You can provide the clear text content using the stringData for Secret creation.
+              type: object
             status:
               type: object
               x-kubernetes-preserve-unknown-fields: true
